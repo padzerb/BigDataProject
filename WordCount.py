@@ -41,3 +41,16 @@ for genre, word_counts in genre_word_counts.items():
 print("\nMost Common 5-Letter Word in Each Genre (excluding 'verse'):")
 for genre, word in genre_most_common_word.items():
     print(f"{genre}: {word}")
+
+
+
+# Most Common 5-Letter Word in Each Genre (excluding 'verse'):
+# tag: No 5-letter words found
+# rap: bitch
+# rb: wanna
+# rock: there
+# pop: there
+# misc: which
+# country: there
+
+#5 min 33.5 sec
