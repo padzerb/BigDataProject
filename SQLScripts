@@ -1,0 +1,43 @@
+-- 1. Count main artist appearances
+WITH main_artist_counts AS (
+  SELECT 
+    main_artist AS artist,
+    COUNT(*) AS main_count
+  FROM songs
+  WHERE main_artist IS NOT NULL
+  GROUP BY main_artist
+),
+
+-- 2. Extract and count featured artists
+-- Assumes features are stored like: {"Artist A","Artist B"}
+-- Replace `{`/`}` with `[`/`]` to make it JSON and use json_array_elements_text()
+feature_artist_counts AS (
+  SELECT 
+    TRIM(BOTH '"' FROM json_array_elements_text(REPLACE(REPLACE(features, '{', '['), '}', ']'))) AS artist,
+    COUNT(*) AS feature_count
+  FROM songs
+  WHERE features IS NOT NULL AND features != ''
+  GROUP BY artist
+),
+
+-- 3. Combine both counts
+combined_counts AS (
+  SELECT 
+    artist,
+    COALESCE(main_count, 0) AS main_count,
+    COALESCE(feature_count, 0) AS feature_count,
+    COALESCE(main_count, 0) + COALESCE(feature_count, 0) AS total_appearances
+  FROM main_artist_counts
+  FULL OUTER JOIN feature_artist_counts USING (artist)
+)
+
+-- 4. Select most common from each
+SELECT
+  (SELECT artist FROM main_artist_counts ORDER BY main_count DESC LIMIT 1) AS most_common_main_artist,
+  (SELECT main_count FROM main_artist_counts ORDER BY main_count DESC LIMIT 1) AS main_count,
+
+  (SELECT artist FROM feature_artist_counts ORDER BY feature_count DESC LIMIT 1) AS most_common_featured_artist,
+  (SELECT feature_count FROM feature_artist_counts ORDER BY feature_count DESC LIMIT 1) AS feature_count,
+
+  (SELECT artist FROM combined_counts ORDER BY total_appearances DESC LIMIT 1) AS most_common_overall_artist,
+  (SELECT total_appearances FROM combined_counts ORDER BY total_appearances DESC LIMIT 1) AS overall_count;
