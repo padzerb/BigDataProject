@@ -1,3 +1,5 @@
+-- Below are the SQL queries needed to preform MostCommonOverallArtist
+
 -- 1. Count main artist appearances
 WITH main_artist_counts AS (
   SELECT 
