@@ -45,12 +45,9 @@ for genre, word in genre_most_common_word.items():
 
 
 # Most Common 5-Letter Word in Each Genre (excluding 'verse'):
-# tag: No 5-letter words found
-# rap: bitch
-# rb: wanna
-# rock: there
-# pop: there
-# misc: which
 # country: there
+# rock: never
+# pop: never
+# misc: their
 
 #5 min 33.5 sec
